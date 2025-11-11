@@ -1,4 +1,4 @@
-# church_management/reportbuilder_urls.py
+# loan_management/reportbuilder_urls.py
 from django.urls import path, include
 from rest_framework import routers
 from django.contrib.admin.views.decorators import staff_member_required
