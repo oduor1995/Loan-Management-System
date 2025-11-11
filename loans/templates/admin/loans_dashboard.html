@@ -1,0 +1,207 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div id="content-main">
+  <div class="module">
+    <h2>Monthly Loan Performance</h2>
+    <canvas id="loanPerformanceChart" style="max-width: 100%; height: 300px;"></canvas>
+  </div>
+
+  <div class="module">
+    <h2>Loan Status Distribution</h2>
+    <canvas id="loanStatusChart" style="max-width: 100%; height: 300px;"></canvas>
+  </div>
+
+  <div class="module">
+    <h2>Key Metrics</h2>
+    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+      <div style="text-align: center; margin: 10px;">
+        <h3>Total Loans Outstanding</h3>
+        <p style="font-size: 24px; color: #007bff;">${{ total_loans_outstanding|floatformat:2 }}</p>
+      </div>
+      <div style="text-align: center; margin: 10px;">
+        <h3>Total Principal Disbursed</h3>
+        <p style="font-size: 24px; color: #28a745;">${{ total_principal_disbursed|floatformat:2 }}</p>
+      </div>
+      <div style="text-align: center; margin: 10px;">
+        <h3>Total Repayments Received</h3>
+        <p style="font-size: 24px; color: #17a2b8;">${{ total_repayments_received|floatformat:2 }}</p>
+      </div>
+      <div style="text-align: center; margin: 10px;">
+        <h3>Total Interest Earned</h3>
+        <p style="font-size: 24px; color: #ffc107;">${{ total_interest_earned|floatformat:2 }}</p>
+      </div>
+      <div style="text-align: center; margin: 10px;">
+        <h3>Total Borrowers</h3>
+        <p style="font-size: 24px; color: #6c757d;">{{ borrower_count }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2>Loan Status Summary</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #f8f9fa;">
+          <th style="border: 1px solid #dee2e6; padding: 8px; text-align: left;">Status</th>
+          <th style="border: 1px solid #dee2e6; padding: 8px; text-align: center;">Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #dee2e6; padding: 8px;">Active Loans</td>
+          <td style="border: 1px solid #dee2e6; padding: 8px; text-align: center;">{{ active_loans }}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #dee2e6; padding: 8px;">Pending Disbursement</td>
+          <td style="border: 1px solid #dee2e6; padding: 8px; text-align: center;">{{ pending_loans }}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #dee2e6; padding: 8px;">Paid Off</td>
+          <td style="border: 1px solid #dee2e6; padding: 8px; text-align: center;">{{ paid_off_loans }}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #dee2e6; padding: 8px;">Defaulted</td>
+          <td style="border: 1px solid #dee2e6; padding: 8px; text-align: center;">{{ defaulted_loans }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="module">
+    <h2>Recent Activity (Last 30 Days)</h2>
+    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+      <div style="text-align: center; margin: 10px;">
+        <h4>New Applications</h4>
+        <p style="font-size: 20px; color: #007bff;">{{ recent_applications }}</p>
+      </div>
+      <div style="text-align: center; margin: 10px;">
+        <h4>Recent Disbursements</h4>
+        <p style="font-size: 20px; color: #28a745;">${{ recent_disbursements|floatformat:2 }}</p>
+      </div>
+      <div style="text-align: center; margin: 10px;">
+        <h4>Recent Repayments</h4>
+        <p style="font-size: 20px; color: #17a2b8;">${{ recent_repayments|floatformat:2 }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="module">
+    <h2>Operating Expenses</h2>
+    <p style="font-size: 18px; text-align: center;">Total Expenses: ${{ total_operating_expenses|floatformat:2 }}</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Loan Performance Bar Chart
+    var loanCtx = document.getElementById('loanPerformanceChart');
+    if (loanCtx) {
+        loanCtx = loanCtx.getContext('2d');
+        var months = JSON.parse('{{ months_json|safe }}');
+        var disbursementData = JSON.parse('{{ disbursement_data_json|safe }}');
+        var repaymentData = JSON.parse('{{ repayment_data_json|safe }}');
+
+        var loanChart = new Chart(loanCtx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Disbursements',
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        data: disbursementData
+                    },
+                    {
+                        label: 'Repayments',
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        data: repaymentData
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Loan Status Pie Chart
+    var statusCtx = document.getElementById('loanStatusChart');
+    if (statusCtx) {
+        statusCtx = statusCtx.getContext('2d');
+        var loanLabels = JSON.parse('{{ loan_labels_json|safe }}');
+        var loanData = JSON.parse('{{ loan_data_json|safe }}');
+
+        var statusChart = new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: loanLabels,
+                datasets: [{
+                    data: loanData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 205, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+canvas {
+    max-height: 300px;
+}
+.admin-reports-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+.admin-reports-list > li {
+    margin-bottom: 10px;
+}
+.admin-reports-list strong {
+    display: block;
+    font-size: 14px;
+    color: #444;
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+.admin-reports-list ul {
+    margin-left: 20px;
+    list-style-type: disc;
+}
+.admin-reports-list ul li a {
+    text-decoration: none;
+    color: #0b79d0;
+}
+.admin-reports-list ul li a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

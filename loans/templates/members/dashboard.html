@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Church Management Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #2c3e50;
+            color: #ecf0f1;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .menu-section {
+            border-top: 1px solid #34495e;
+        }
+
+        .menu-title {
+            padding: 12px 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: #bdc3c7;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-items {
+            display: none;
+            /* hidden by default */
+            flex-direction: column;
+        }
+
+        .menu-items a {
+            display: flex;
+            align-items: center;
+            padding: 10px 35px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .menu-items a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-items a:hover {
+            background-color: #34495e;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2><i class="fa-solid fa-church"></i> Church Dashboard</h2>
+
+        <!-- Members -->
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenu(this)">
+                Members <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="menu-items">
+                <a href="{% url 'admin:members_member_changelist' %}">
+                    <i class="fa-solid fa-database"></i> Manage Members
+                </a>
+            </div>
+        </div>
+
+        <!-- Finance -->
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenu(this)">
+                Finance <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="menu-items">
+                <a href="{% url 'members:income_expenditure' %}">
+                    <i class="fa-solid fa-coins"></i> Income & Expenditure
+                </a>
+                <a href="#">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Donations
+                </a>
+                <a href="#">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Expenses
+                </a>
+                <a href="#">
+                    <i class="fa-solid fa-chart-line"></i> Financial Reports
+                </a>
+            </div>
+        </div>
+
+        <!-- Marketplace -->
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenu(this)">
+                Marketplace <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="menu-items">
+                <a href="{% url 'members:marketplace_home' %}">
+                    <i class="fa-solid fa-store"></i> Browse Businesses
+                </a>
+                <a href="{% url 'members:marketplace_my_listings' %}">
+                    <i class="fa-solid fa-list"></i> My Listings
+                </a>
+                <a href="{% url 'members:marketplace_create_listing' %}">
+                    <i class="fa-solid fa-plus"></i> Create Listing
+                </a>
+            </div>
+        </div>
+
+        <!-- Admin -->
+        <div class="menu-section">
+            <div class="menu-title" onclick="toggleMenu(this)">
+                Admin <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="menu-items">
+                <a href="/admin/">
+                    <i class="fa-solid fa-gear"></i> Django Admin
+                </a>
+                <a href="{% url 'logout' %}">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script>
+        function toggleMenu(titleDiv) {
+            const items = titleDiv.nextElementSibling;
+            const icon = titleDiv.querySelector('i.fa-chevron-down, i.fa-chevron-up');
+            if (items.style.display === "flex") {
+                items.style.display = "none";
+                if (icon) icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+            } else {
+                items.style.display = "flex";
+                if (icon) icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

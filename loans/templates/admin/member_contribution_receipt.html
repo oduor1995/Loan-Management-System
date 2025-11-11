@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<!-- <h1>Member Contribution Receipt</h1> -->
+
+<form method="get">
+  {{ form.as_p }}
+  <button type="submit" class="button">Filter</button>
+</form>
+
+{% if member %}
+  <h2>Contributions for {{ member }}</h2>
+  <table border="1" style="border-collapse: collapse; width:70%;">
+    <tr>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Type</th>
+      <th>Notes</th>
+    </tr>
+    {% for c in contributions %}
+      <tr>
+        <td>{{ c.date }}</td>
+        <td>{{ c.amount }}</td>
+        <td>{{ c.contribution_type }}</td>
+        <td>{{ c.notes }}</td>
+      </tr>
+    {% endfor %}
+    <tr>
+      <th colspan="3" style="text-align:right;">Total</th>
+      <td><strong>{{ total_contributions }}</strong></td>
+    </tr>
+  </table>
+
+  <p>
+    <a href="{% url 'admin:export_member_contribution_receipt' %}?member={{ member.id }}{% if form.cleaned_data.start_date %}&start_date={{ form.cleaned_data.start_date|date:"Y-m-d" }}{% endif %}{% if form.cleaned_data.end_date %}&end_date={{ form.cleaned_data.end_date|date:"Y-m-d" }}{% endif %}"
+       class="button">Export to CSV</a>
+
+    <a href="{% url 'admin:member_contribution_receipt_pdf' %}?member={{ member.id }}{% if form.cleaned_data.start_date %}&start_date={{ form.cleaned_data.start_date|date:"Y-m-d" }}{% endif %}{% if form.cleaned_data.end_date %}&end_date={{ form.cleaned_data.end_date|date:"Y-m-d" }}{% endif %}"
+       class="button">Export to PDF</a>
+  </p>
+{% endif %}
+{% endblock %}

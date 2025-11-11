@@ -1,0 +1,2 @@
+media/sermons/video/*.mp4 filter=lfs diff=lfs merge=lfs -text
+media/sermons/video/videoplayback.mp4 filter=lfs diff=lfs merge=lfs -text

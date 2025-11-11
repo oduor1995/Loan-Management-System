@@ -1,0 +1,125 @@
+{% extends 'members/dashboard.html' %}
+{% load static %}
+
+{% block title %}Write Review - {{ listing.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-star"></i> Write a Review
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'members:marketplace_listing_detail' listing.pk %}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back to Listing
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Business Info -->
+                    <div class="text-center mb-4">
+                        {% if listing.images.first %}
+                        <img src="{{ listing.images.first.image.url }}" class="rounded mb-3"
+                             alt="{{ listing.title }}" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% endif %}
+                        <h4>{{ listing.title }}</h4>
+                        <p class="text-muted">{{ listing.business_type }}</p>
+                        <p class="mb-0">by {{ listing.member.full_name }}</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="id_rating">Rating *</label>
+                            <div class="rating-stars mb-2">
+                                <input type="radio" id="star5" name="rating" value="5" required>
+                                <label for="star5" title="5 stars">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4" title="4 stars">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3" title="3 stars">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2" title="2 stars">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                                <input type="radio" id="star1" name="rating" value="1">
+                                <label for="star1" title="1 star">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">Click on a star to rate this business</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_comment">Your Review</label>
+                            <textarea name="comment" id="id_comment" class="form-control" rows="4"
+                                      placeholder="Share your experience with this business..."></textarea>
+                            <small class="form-text text-muted">Optional: Tell others about your experience</small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Review Guidelines:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Be honest and constructive</li>
+                                <li>Focus on your personal experience</li>
+                                <li>Keep it respectful and appropriate</li>
+                                <li>Reviews are public and visible to the church community</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane"></i> Submit Review
+                            </button>
+                            <a href="{% url 'members:marketplace_listing_detail' listing.pk %}"
+                               class="btn btn-secondary btn-lg ml-2">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.rating-stars {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.rating-stars input[type="radio"] {
+    display: none;
+}
+
+.rating-stars label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.rating-stars input[type="radio"]:checked ~ label,
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    color: #ffc107;
+}
+
+.rating-stars input[type="radio"]:checked ~ label {
+    color: #ffc107;
+}
+</style>
+{% endblock %}

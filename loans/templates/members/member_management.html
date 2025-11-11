@@ -1,0 +1,27 @@
+{% extends "members/dashboard.html" %}
+
+{% block content %}
+<h1>Member Management</h1>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Joined</th>
+        <th>Active</th>
+    </tr>
+    {% for member in members %}
+    <tr>
+        <td>{{ member.first_name }}</td>
+        <td>{{ member.last_name }}</td>
+        <td>{{ member.email }}</td>
+        <td>{{ member.phone }}</td>
+        <td>{{ member.joined_date }}</td>
+        <td>{{ member.is_active }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">No members found.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

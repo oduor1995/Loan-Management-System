@@ -1,0 +1,168 @@
+{% extends 'members/dashboard.html' %}
+{% load static %}
+
+{% block title %}Create Business Listing - Marketplace{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-plus"></i> Create Business Listing
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'members:marketplace_home' %}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back to Marketplace
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_title">Business Name *</label>
+                                    <input type="text" name="title" id="id_title" class="form-control"
+                                           placeholder="Enter your business name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_business_type">Business Type *</label>
+                                    <input type="text" name="business_type" id="id_business_type" class="form-control"
+                                           placeholder="e.g., Retail, Service, Consulting" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_category">Category *</label>
+                            <select name="category" id="id_category" class="form-control" required>
+                                <option value="">Select a category</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_description">Description *</label>
+                            <textarea name="description" id="id_description" class="form-control" rows="4"
+                                      placeholder="Describe your business, services, and what makes you unique..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_services_offered">Services Offered</label>
+                            <textarea name="services_offered" id="id_services_offered" class="form-control" rows="3"
+                                      placeholder="List the specific services or products you offer"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_contact_phone">Phone Number</label>
+                                    <input type="tel" name="contact_phone" id="id_contact_phone" class="form-control"
+                                           placeholder="+1234567890">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_contact_email">Email Address</label>
+                                    <input type="email" name="contact_email" id="id_contact_email" class="form-control"
+                                           placeholder="contact@yourbusiness.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_website">Website</label>
+                            <input type="url" name="website" id="id_website" class="form-control"
+                                   placeholder="https://www.yourbusiness.com">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_location">Physical Location</label>
+                                    <input type="text" name="location" id="id_location" class="form-control"
+                                           placeholder="Street address, city, state">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_service_area">Service Area</label>
+                                    <input type="text" name="service_area" id="id_service_area" class="form-control"
+                                           placeholder="Areas you serve (e.g., Nairobi, Online)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_established_year">Year Established</label>
+                                    <input type="number" name="established_year" id="id_established_year" class="form-control"
+                                           placeholder="2020" min="1800" max="2030">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_employee_count">Team Size</label>
+                                    <select name="employee_count" id="id_employee_count" class="form-control">
+                                        <option value="">Select team size</option>
+                                        <option value="1-5">1-5 employees</option>
+                                        <option value="6-10">6-10 employees</option>
+                                        <option value="11-25">11-25 employees</option>
+                                        <option value="26-50">26-50 employees</option>
+                                        <option value="50+">50+ employees</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_price_range">Price Range</label>
+                                    <select name="price_range" id="id_price_range" class="form-control">
+                                        <option value="">Select price range</option>
+                                        <option value="$">Budget-friendly</option>
+                                        <option value="$$">Moderate</option>
+                                        <option value="$$$">Premium</option>
+                                        <option value="$$$$">Luxury</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_images">Business Images</label>
+                            <input type="file" name="images" id="id_images" class="form-control" multiple
+                                   accept="image/*">
+                            <small class="form-text text-muted">
+                                You can upload up to 5 images. The first image will be the primary photo.
+                            </small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Note:</strong> Your listing will be reviewed by church administrators before being published.
+                            You will receive a notification once it's approved.
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Submit for Approval
+                            </button>
+                            <a href="{% url 'members:marketplace_home' %}" class="btn btn-secondary btn-lg ml-2">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

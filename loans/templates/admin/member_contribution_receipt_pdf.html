@@ -1,0 +1,55 @@
+<!-- templates/admin/member_contribution_receipt_pdf.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ church_name }} - Member Contribution Receipt</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 5px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h1, h2 { text-align: center; margin: 0; }
+    </style>
+</head>
+<body>
+    <h1>{{ church_name }}</h1>
+    <h2>Member Contribution Receipt</h2>
+    {% if member %}
+        <p><strong>Member:</strong> {{ member.full_name }}</p>
+    {% endif %}
+    {% if start_date or end_date %}
+        <p><strong>Period:</strong> {{ start_date }} - {{ end_date }}</p>
+    {% endif %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in contributions %}
+            <tr>
+                <td>{{ c.date }}</td>
+                <td>{{ c.contribution_type }}</td>
+                <td>{{ c.amount }}</td>
+                <td>{{ c.notes }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;">No contributions found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2">Total</th>
+                <th colspan="2">{{ total_contributions }}</th>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

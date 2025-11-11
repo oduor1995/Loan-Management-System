@@ -1,0 +1,48 @@
+<!-- templates/admin/income_expenditure_pdf.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ church_name }} - Income & Expenditure Statement</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        table { width: 50%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 5px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h1, h2 { text-align: center; margin: 0; }
+    </style>
+</head>
+<body>
+    <h1>{{ church_name }}</h1>
+    <h2>Income & Expenditure Statement</h2>
+    {% if start_date or end_date %}
+        <p><strong>Period:</strong> {{ start_date }} - {{ end_date }}</p>
+    {% endif %}
+    <table>
+        <tr>
+            <th>Member Contributions</th>
+            <td>{{ total_contributions }}</td>
+        </tr>
+        <tr>
+            <th>Group Contributions</th>
+            <td>{{ total_group_contributions }}</td>
+        </tr>
+        <tr>
+            <th>Donations</th>
+            <td>{{ total_donations }}</td>
+        </tr>
+        <tr>
+            <th><b>Total Income</b></th>
+            <td><b>{{ total_income }}</b></td>
+        </tr>
+        <tr>
+            <th>Total Expense</th>
+            <td>{{ total_expense }}</td>
+        </tr>
+        <tr>
+            <th>Balance</th>
+            <td>{{ balance }}</td>
+        </tr>
+    </table>
+</body>
+</html>

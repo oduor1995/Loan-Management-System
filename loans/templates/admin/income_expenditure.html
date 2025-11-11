@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<!-- <h1>Income & Expenditure Statement</h1> -->
+
+<form method="get" style="margin-bottom:20px;">
+  From: {{ form.start_date }} 
+  To: {{ form.end_date }}
+  <button type="submit" class="button">Filter</button>
+</form>
+
+<table border="1" style="border-collapse: collapse; width:50%;">
+  <tr>
+    <th>Member Contributions</th>
+    <td>{{ total_contributions }}</td>
+  </tr>
+  <tr>
+    <th>Group Contributions</th>
+    <td>{{ total_group_contributions }}</td>
+  </tr>
+  <tr>
+    <th>Donations</th>
+    <td>{{ total_donations }}</td>
+  </tr>
+  <tr>
+    <th><b>Total Income</b></th>
+    <td><b>{{ total_income }}</b></td>
+  </tr>
+  <tr>
+    <th>Total Expense</th>
+    <td>{{ total_expense }}</td>
+  </tr>
+  <tr>
+    <th>Balance</th>
+    <td>{{ balance }}</td>
+  </tr>
+</table>
+
+<p>
+  <a href="{% url 'admin:export_income_expenditure' %}{% if form.cleaned_data.start_date %}?start_date={{ form.cleaned_data.start_date|date:"Y-m-d" }}{% if form.cleaned_data.end_date %}&end_date={{ form.cleaned_data.end_date|date:"Y-m-d" }}{% endif %}{% elif form.cleaned_data.end_date %}?end_date={{ form.cleaned_data.end_date|date:"Y-m-d" }}{% endif %}" class="button">Export to CSV</a>
+  <a href="{% url 'admin:income_expenditure_pdf' %}{% if form.cleaned_data.start_date %}?start_date={{ form.cleaned_data.start_date|date:"Y-m-d" }}{% if form.cleaned_data.end_date %}&end_date={{ form.cleaned_data.end_date|date:"Y-m-d" }}{% endif %}{% elif form.cleaned_data.end_date %}?end_date={{ form.cleaned_data.end_date|date:"Y-m-d" }}{% endif %}" class="button">Export to PDF</a>
+</p>
+{% endblock %}

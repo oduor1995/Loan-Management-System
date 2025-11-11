@@ -1,0 +1,206 @@
+{% extends 'members/dashboard.html' %}
+{% load static %}
+
+{% block title %}{{ listing.title }} - Marketplace{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-store"></i> {{ listing.title }}
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'members:marketplace_home' %}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back to Marketplace
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Images Carousel -->
+                    {% if listing.images.all %}
+                    <div id="listingCarousel" class="carousel slide mb-4" data-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in listing.images.all %}
+                            <div class="carousel-item {% if image.is_primary %}active{% endif %}">
+                                <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption|default:listing.title }}"
+                                     style="height: 400px; object-fit: cover;">
+                                {% if image.caption %}
+                                <div class="carousel-caption d-none d-md-block">
+                                    <p>{{ image.caption }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if listing.images.count > 1 %}
+                        <a class="carousel-control-prev" href="#listingCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#listingCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="text-center mb-4">
+                        <div class="bg-light rounded p-5">
+                            <i class="fas fa-store fa-4x text-muted"></i>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Business Details -->
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>About {{ listing.title }}</h4>
+                            <p class="text-muted">{{ listing.business_type }}</p>
+                            <p>{{ listing.description }}</p>
+
+                            {% if listing.services_offered %}
+                            <h5>Services Offered</h5>
+                            <p>{{ listing.services_offered }}</p>
+                            {% endif %}
+
+                            <!-- Business Info -->
+                            <div class="row mt-4">
+                                {% if listing.established_year %}
+                                <div class="col-sm-6">
+                                    <strong>Established:</strong> {{ listing.established_year }}
+                                </div>
+                                {% endif %}
+                                {% if listing.employee_count %}
+                                <div class="col-sm-6">
+                                    <strong>Team Size:</strong> {{ listing.employee_count }}
+                                </div>
+                                {% endif %}
+                                {% if listing.price_range %}
+                                <div class="col-sm-6">
+                                    <strong>Price Range:</strong> {{ listing.price_range }}
+                                </div>
+                                {% endif %}
+                                {% if listing.location %}
+                                <div class="col-sm-6">
+                                    <strong>Location:</strong> {{ listing.location }}
+                                </div>
+                                {% endif %}
+                                {% if listing.service_area %}
+                                <div class="col-sm-6">
+                                    <strong>Service Area:</strong> {{ listing.service_area }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Contact Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Owner:</strong> {{ listing.member.full_name }}</p>
+
+                                    {% if listing.contact_phone %}
+                                    <p><strong>Phone:</strong>
+                                        <a href="tel:{{ listing.contact_phone }}">{{ listing.contact_phone }}</a>
+                                    </p>
+                                    {% endif %}
+
+                                    {% if listing.contact_email %}
+                                    <p><strong>Email:</strong>
+                                        <a href="mailto:{{ listing.contact_email }}">{{ listing.contact_email }}</a>
+                                    </p>
+                                    {% endif %}
+
+                                    {% if listing.website %}
+                                    <p><strong>Website:</strong>
+                                        <a href="{{ listing.website }}" target="_blank" rel="noopener">
+                                            {{ listing.website }}
+                                            <i class="fas fa-external-link-alt ml-1"></i>
+                                        </a>
+                                    </p>
+                                    {% endif %}
+
+                                    {% if can_review %}
+                                    <a href="{% url 'members:marketplace_add_review' listing.pk %}"
+                                       class="btn btn-outline-primary btn-block mt-3">
+                                        <i class="fas fa-star"></i> Write Review
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Related Listings -->
+            {% if related_listings %}
+            <div class="card">
+                <div class="card-header">
+                    <h5>Similar Businesses</h5>
+                </div>
+                <div class="card-body">
+                    {% for related in related_listings %}
+                    <div class="media mb-3">
+                        {% if related.images.first %}
+                        <img src="{{ related.images.first.image.url }}" class="mr-3 rounded"
+                             alt="{{ related.title }}" style="width: 60px; height: 60px; object-fit: cover;">
+                        {% else %}
+                        <div class="mr-3 bg-light rounded d-flex align-items-center justify-content-center"
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-store text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="media-body">
+                            <h6 class="mt-0">
+                                <a href="{% url 'members:marketplace_listing_detail' related.pk %}">
+                                    {{ related.title }}
+                                </a>
+                            </h6>
+                            <small class="text-muted">{{ related.business_type }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Reviews -->
+            {% if reviews %}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Reviews ({{ reviews.count }})</h5>
+                </div>
+                <div class="card-body">
+                    {% for review in reviews %}
+                    <div class="review-item mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>{{ review.reviewer.full_name }}</strong>
+                                <div class="text-warning">
+                                    {% for i in "12345" %}
+                                    <i class="fas fa-star{% if forloop.counter > review.rating %}-o{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+                        </div>
+                        {% if review.comment %}
+                        <p class="mt-2 mb-0">{{ review.comment }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
