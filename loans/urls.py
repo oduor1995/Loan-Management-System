@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import RecordLoanRepaymentView
-from .reports import LoanPerformanceReport
+
 app_name = 'members'
 
 urlpatterns = [
@@ -9,7 +9,7 @@ urlpatterns = [
     path('borrowers/', views.borrower_management, name='borrower_management'),
     path('portfolio/', views.loan_portfolio_overview, name='loan_portfolio_overview'),
     path('api/record-repayment/', RecordLoanRepaymentView.as_view(), name='record_loan_repayment'),
-    path('reports/loan-performance/', LoanPerformanceReport.as_view(), name='loan_performance_report'),
+    
 
     # Loan Management URLs
     path('applications/', views.loan_applications, name='loan_applications'),

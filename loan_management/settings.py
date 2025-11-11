@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'import_export',
     "rangefilter",
-    'slick_reporting',
+    
     'crispy_forms',   # recommended for nice forms in reports
     'crispy_bootstrap5',
      'loans.apps.LoansConfig',

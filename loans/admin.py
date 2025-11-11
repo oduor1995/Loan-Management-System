@@ -19,7 +19,7 @@ from .models import Borrower, LoanApplication, Loan, LoanRepayment, Collateral, 
 from rangefilter.filters import DateRangeFilter
 from .models import LoanReport
 from django.utils.translation import gettext_lazy as _
-from .reports import LoanPerformanceReport
+
 from .models import LoanRepayment, OperatingExpense
 
 

@@ -10,7 +10,6 @@ django-static-fontawesome
 django-static-jquery3
 django-admin-global-sidebar
 django-rangefilter
-django-slick-reporting
 django-crispy-forms
 crispy-bootstrap5
 xhtml2pdf
